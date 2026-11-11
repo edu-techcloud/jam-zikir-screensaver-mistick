@@ -12,14 +12,12 @@ import android.os.SystemClock;
 import android.service.dreams.DreamService;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
-import android.webkit.WebViewClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import java.util.Locale;
 
 public class ClockDream extends DreamService {
-    private WebView web;
+    private FrameLayout root;
 
     @Override
     public void onAttachedToWindow() {
@@ -27,24 +25,21 @@ public class ClockDream extends DreamService {
         setInteractive(false);
         setFullscreen(true);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        web = new WebView(this);
-        web.setBackgroundColor(0xFF050A18);
-        WebSettings s = web.getSettings();
-        s.setJavaScriptEnabled(true);
-        s.setDomStorageEnabled(true);
-        s.setAllowFileAccess(true);
-        s.setAllowUniversalAccessFromFileURLs(true);
-        web.setWebViewClient(new WebViewClient());
-        web.setWebChromeClient(new WebChromeClient());
-        web.addJavascriptInterface(new Bridge(getApplicationContext()), "ZK");
-        setContentView(web);
-        web.loadUrl("file:///android_asset/index.html");
+        root = Shell.build(this);
+        setContentView(root);
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (web != null) { web.destroy(); web = null; }
+        if (root != null) {
+            if (root.getChildCount() > 0 && root.getChildAt(0) instanceof WebView) {
+                WebView w = (WebView) root.getChildAt(0);
+                root.removeAllViews();
+                w.destroy();
+            }
+            root = null;
+        }
     }
 
     /** Data sistem sebenar Mi Stick untuk panel Sistem. */
