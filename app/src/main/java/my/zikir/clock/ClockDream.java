@@ -10,7 +10,10 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
 import android.service.dreams.DreamService;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import java.util.Locale;
@@ -23,6 +26,7 @@ public class ClockDream extends DreamService {
         super.onAttachedToWindow();
         setInteractive(false);
         setFullscreen(true);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         web = new WebView(this);
         web.setBackgroundColor(0xFF050A18);
         WebSettings s = web.getSettings();
@@ -30,9 +34,11 @@ public class ClockDream extends DreamService {
         s.setDomStorageEnabled(true);
         s.setAllowFileAccess(true);
         s.setAllowUniversalAccessFromFileURLs(true);
+        web.setWebViewClient(new WebViewClient());
+        web.setWebChromeClient(new WebChromeClient());
         web.addJavascriptInterface(new Bridge(getApplicationContext()), "ZK");
-        web.loadUrl("file:///android_asset/index.html");
         setContentView(web);
+        web.loadUrl("file:///android_asset/index.html");
     }
 
     @Override
