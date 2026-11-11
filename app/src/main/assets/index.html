@@ -83,6 +83,10 @@ td.t span{display:inline-block;min-width:72px;line-height:44px;border-radius:15p
 .r b{color:#3fb4ff;font-weight:600;font-variant-numeric:tabular-nums;font-size:38px}
 .r.on{background:linear-gradient(90deg,rgba(30,160,255,.5),rgba(30,160,255,.16));border-color:rgba(120,200,255,.65);box-shadow:0 0 38px rgba(30,160,255,.38)}
 .r.on span{font-weight:700}.r.on b{color:#fff}.r.on em{display:block}.r.past{opacity:.5}
+html.lite .g{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none!important;background:linear-gradient(145deg,rgba(40,58,100,.92),rgba(18,26,52,.92))!important}
+html.lite .g::before{display:none}html.lite .orb{display:none}html.lite #stage{animation:none}
+html.lite *{text-shadow:none!important;filter:none!important}html.lite .ic,html.lite .r.on,html.lite td.t span{box-shadow:none!important}
+html.lite #bg{background:linear-gradient(135deg,#0b1e4a,#070f26 55%,#1a0f08)}
 html.nb .g{background:linear-gradient(145deg,rgba(40,55,95,.92),rgba(18,26,52,.92))}
 #ayat{grid-column:1/4;display:flex;align-items:center;justify-content:center;font-size:29px;color:#e3ebfa;padding:0 50px;border-radius:38px;transition:opacity .8s;text-align:center}
 </style></head><body>
@@ -133,7 +137,8 @@ Isyak:['#0d1b4a,#4a46b8','<path d="M38 10A22 22 0 1 0 54 42A17 17 0 0 1 38 10z" 
 let T={};KEYS.forEach(k=>T[k[0]]=k[2]);let hijri='';
 function fit(){const w=innerWidth||document.documentElement.clientWidth||screen.width||1920,h=innerHeight||document.documentElement.clientHeight||screen.height||1080;$('stage').style.transform='translate(-50%,-50%) scale('+Math.min(w/1920,h/1080)+')'}
 addEventListener('resize',fit);addEventListener('load',fit);fit();setInterval(fit,1500);
-if(!(window.CSS&&CSS.supports&&(CSS.supports('backdrop-filter','blur(1px)')||CSS.supports('-webkit-backdrop-filter','blur(1px)'))))document.documentElement.className='nb';
+if(!(window.CSS&&CSS.supports&&(CSS.supports('backdrop-filter','blur(1px)')||CSS.supports('-webkit-backdrop-filter','blur(1px)'))))document.documentElement.classList.add('nb');
+if(/[?&]lite=1/.test(location.search))document.documentElement.classList.add('lite');
 $('rows').innerHTML=KEYS.map(k=>{const c=ICO[k[0]][0].split(',');return `<div class="r" id="r${k[0]}"><div class="ic" style="background:linear-gradient(145deg,${c[0]},${c[1]})"><svg viewBox="0 0 64 64">${ICO[k[0]][1]}</svg></div><span>${k[0]}</span><em>SEKARANG</em><b></b></div>`}).join('');
 function hijriNow(){if(hijri)return hijri;try{const f=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{month:'numeric',year:'numeric'}).formatToParts(new Date());const m=f.find(x=>x.type=='month').value,y=f.find(x=>x.type=='year').value;return HJ[m-1]+' '+y+'H'}catch(e){return''}}
 function cal(d){const y=d.getFullYear(),m=d.getMonth(),f=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();let h='<tr>'+['Ah','Is','Se','Ra','Ka','Ju','Sa'].map(x=>'<th>'+x+'</th>').join('')+'</tr><tr>';
@@ -214,4 +219,5 @@ let hi=Math.floor(Math.random()*HADIS.length),ai=Math.floor(Math.random()*AYAT.l
 function rot(){const h=$('had'),a=$('ayat');h.style.opacity=a.style.opacity=0;setTimeout(()=>{const x=HADIS[hi++%HADIS.length];$('htxt').textContent='“'+x[0]+'”';$('htxt').style.fontSize=(x[0].length>120?26:x[0].length>80?29:33)+'px';$('hsrc').textContent=x[1];$('hrf').textContent='('+x[2]+')';a.textContent='“✨ '+AYAT[ai++%AYAT.length]+'”';h.style.opacity=a.style.opacity=1},800)}
 rot();setInterval(rot,300000);sys();setTimeout(sys,1500);setInterval(sys,5000);tick();setInterval(tick,1000);
 {const m=(navigator.userAgent.match(/Chrome\/(\d+)/)||[])[1];$('boot').textContent='Jam Zikir · WebView '+(m||'?');setTimeout(()=>{if(!window.zkErr)$('boot').style.display='none'},6000)}
+requestAnimationFrame(function(){try{ZK.ready()}catch(e){}});
 </script></body></html>
